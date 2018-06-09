@@ -14,32 +14,50 @@ class Dropdown extends React.Component {
     this.state = {
       isOpen: false,
       inputValue: '',
-      items: getCounties('', MAX_ITEMS_AMOUNT),
+      countries: [],
+      selectedCountry: null,
     };
+
+    this.dropdown = React.createRef();
+  }
+
+  componentDidMount = () => {
+    document.addEventListener('click', this.onClickHandler);
+  }
+
+  componentWillUnmount = () => {
+    document.removeEventListener('click', this.onClickHandler);
+  }
+
+  onClickHandler = (event) => {
+    const contains = this.dropdown.current.contains(event.target);
+    if (contains) {
+      if (event.target.className === classNames('item')) {
+        this.setState({
+          inputValue: '',
+          selectedCountry: event.target.innerText,
+          isOpen: false,
+        });
+      }
+    } else {
+      this.setState({ isOpen: false });
+    }
   }
 
   onChangeHandler = (event) => {
     const inputValue = event.target.value.toLowerCase();
     const countries = getCounties(inputValue, MAX_ITEMS_AMOUNT);
-    this.setState({ inputValue, items: countries });
 
-    // option with debounce
-    // clearTimeout(this.getCountiesDebounce);
-    // this.getCountiesDebounce = setTimeout(() => {
-    //   this.setState({ items: getCounties(this.state.inputValue, MAX_ITEMS_AMOUNT) });
-    // }, 300);
+    this.setState({ inputValue, countries });
   }
 
   onFocusHandler = () => {
-    this.setState({ isOpen: true });
-  }
-
-  onBlurHandler = () => {
-    this.setState({ isOpen: false });
+    const countries = getCounties('', MAX_ITEMS_AMOUNT);
+    this.setState({ isOpen: true, countries });
   }
 
   getListItems() {
-    const listItems = this.state.items.map((item) => {
+    const listItems = this.state.countries.map((item) => {
       let value = item.name;
 
       if (this.state.inputValue) {
@@ -58,22 +76,33 @@ class Dropdown extends React.Component {
   }
 
   render() {
+    let { inputValue } = this.state;
+    if (!this.state.isOpen && this.state.selectedCountry) {
+      inputValue = this.state.selectedCountry;
+    }
+
     return (
-      <div className={classNames()}>
+      <div className={classNames()} ref={this.dropdown}>
         <div className={classNames('select')}>
           <input
             className={classNames('input')}
             onChange={this.onChangeHandler}
             onFocus={this.onFocusHandler}
-            onBlur={this.onBlurHandler}
             type="text"
+            value={inputValue}
           />
-          <div className={classNames('placeholder', { '--forceOpen': this.state.inputValue })}>Выберете страну</div>
+          <div className={classNames('placeholder', { '--forceOpen': inputValue || this.state.isOpen })}>
+            Выберете страну
+          </div>
           <div className={classNames('expander')}>
             <div className={classNames('trangle', { '--isOpen': this.state.isOpen })} />
           </div>
         </div>
-        <div className={classNames('list', { '--isOpen': this.state.isOpen && this.state.items.length })}>
+        <div
+          className={classNames('list', {
+            '--isOpen': this.state.isOpen && this.state.countries.length,
+          })}
+        >
           {this.getListItems()}
         </div>
       </div>

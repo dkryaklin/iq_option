@@ -20,12 +20,7 @@
     flex-grow 1
     font-size inherit
     cursor pointer
-
-    &:focus + div
-      top -9px
-      font-size 13px
-      height 15px
-      background-color #fff
+    text-transform capitalize
 
   &__placeholder
     transition all 0.3s
@@ -81,9 +76,13 @@
       display flex
     
   &__item
-    margin 15px
+    padding 15px
+    cursor pointer
 
     & span
       text-transform capitalize
       color rgb(244, 155, 70)
       text-decoration underline
+
+    &:hover
+      background-color: rgb(210, 210, 210)
