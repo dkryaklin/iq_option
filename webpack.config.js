@@ -1,6 +1,5 @@
 const path = require('path');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
-const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 
 module.exports = {
   entry: './src/index.jsx',
@@ -19,7 +18,7 @@ module.exports = {
       }, {
         test: /\.styl$/,
         use: [
-          MiniCssExtractPlugin.loader,
+          'style-loader',
           'css-loader',
           'stylus-loader',
         ],
@@ -30,9 +29,6 @@ module.exports = {
     new HtmlWebpackPlugin({
       title: 'Custom template',
       template: './src/index.html',
-    }),
-    new MiniCssExtractPlugin({
-      filename: 'dropdown.css',
     }),
   ],
   devServer: {
