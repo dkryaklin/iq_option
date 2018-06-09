@@ -1,0 +1,64 @@
+.dropdown
+  font-size 16px
+  color rgb(1, 1, 1)
+  font-family: 'Open Sans', sans-serif
+  cursor pointer
+
+  &__select
+    position relative
+    height 50px
+    display flex
+    border 1px solid rgb(163, 166, 175)
+    border-radius 3px
+    align-items center
+
+  &__input
+    padding 0 40px 0 15px
+    border none
+    outline none
+    height 100%
+    flex-grow 1
+    font-size inherit
+    cursor pointer
+
+    &:focus + div
+      top -9px
+      font-size 13px
+      height 15px
+      background-color #fff
+
+  &__placeholder
+    transition all 0.1s
+    padding: 0 10px
+    height 100%
+    left 5px
+    top 0
+    display flex
+    align-items center
+    position absolute
+    pointer-events none
+
+  &__placeholder.--fix
+    top -9px
+    font-size 13px
+    height 15px
+    background-color #fff
+
+  &__expander
+    display flex
+    align-items center
+    width 30px
+    height 100%
+    position absolute
+    right 0
+    top 0
+    pointer-events none
+
+  &__trangle  
+    width 0 
+    height 0
+    border-left 7px solid transparent
+    border-right 7px solid transparent
+    border-top 7px solid rgb(163, 166, 175)
+  // &__list
+  // &__item

@@ -1,8 +1,9 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import './index.styl';
+import Dropdown from './dropdown/dropdown.jsx';
+import './index.styl'
 
 ReactDOM.render(
-  <h1>Hello, world!1</h1>,
+  <Dropdown />,
   document.getElementById('root'),
 );
