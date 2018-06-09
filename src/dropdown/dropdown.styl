@@ -28,7 +28,7 @@
       background-color #fff
 
   &__placeholder
-    transition all 0.1s
+    transition all 0.3s
     padding: 0 10px
     height 100%
     left 5px
@@ -38,11 +38,11 @@
     position absolute
     pointer-events none
 
-  &__placeholder.--fix
-    top -9px
-    font-size 13px
-    height 15px
-    background-color #fff
+    &.--forceOpen
+      top -9px
+      font-size 13px
+      height 15px
+      background-color #fff
 
   &__expander
     display flex
@@ -60,5 +60,30 @@
     border-left 7px solid transparent
     border-right 7px solid transparent
     border-top 7px solid rgb(163, 166, 175)
-  // &__list
-  // &__item
+    transition: transform 0.3s
+
+    &.--isOpen
+      transform: rotate(180deg)
+
+  &__list
+    position absolute
+    left 0
+    right 0
+    top 50px
+    display none
+    border 1px solid rgb(163, 166, 175)
+    border-top: 0px
+    border-radius 0 0 3px 3px
+    margin-bottom -2px
+    flex-direction column
+
+    &.--isOpen
+      display flex
+    
+  &__item
+    margin 15px
+
+    & span
+      text-transform capitalize
+      color rgb(244, 155, 70)
+      text-decoration underline
