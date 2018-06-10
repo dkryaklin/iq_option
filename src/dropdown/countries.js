@@ -1012,7 +1012,7 @@ export const getCounties = (searchQuery, maxAmount = 0) => {
 
   for (let i = 0; i < countries.length; i++) {
     if (!searchQuery || (searchQuery && countries[i].name
-      && countries[i].name.toLowerCase().indexOf(searchQuery) === 0)) {
+      && countries[i].name.toLowerCase().indexOf(searchQuery.toLowerCase()) === 0)) {
       results.push(countries[i]);
     }
 
@@ -1021,7 +1021,17 @@ export const getCounties = (searchQuery, maxAmount = 0) => {
     }
   }
 
-  results.sort((a, b) => a.name > b.name);
+  results.sort((countryA, countryB) => {
+    const nameA = countryA.name.toLowerCase();
+    const nameB = countryB.name.toLowerCase();
+
+    if (nameA < nameB) {
+      return -1;
+    } else if (nameA > nameB) {
+      return 1;
+    }
+    return 0;
+  });
 
   return results;
 };
