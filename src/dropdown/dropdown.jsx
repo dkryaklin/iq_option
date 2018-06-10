@@ -16,6 +16,7 @@ class Dropdown extends React.Component {
 
     this.state = {
       isOpen: false,
+      openToTop: false,
       searchValue: '',
       countries: [],
       selectedCountry: null,
@@ -23,10 +24,25 @@ class Dropdown extends React.Component {
 
     this.dropdownRef = React.createRef();
     this.selectRef = React.createRef();
+    this.itemsListRef = React.createRef();
   }
 
   componentDidMount = () => {
     document.addEventListener('click', this.closeDropdown);
+  }
+
+  componentDidUpdate(prevProps, prevState) {
+    if ((!prevState.isOpen && prevState.isOpen !== this.state.isOpen) ||
+      (this.state.isOpen && this.state.countries.length !== prevState.countries.length)) {
+      const clientRect = this.dropdownRef.current.getBoundingClientRect();
+      const listOffsetHeight = this.itemsListRef.current.getListOffsetHeight();
+
+      if (clientRect.top + clientRect.height + listOffsetHeight + 20 > window.innerHeight) {
+        this.setState({ openToTop: true });
+      } else {
+        this.setState({ openToTop: false });
+      }
+    }
   }
 
   componentWillUnmount = () => {
@@ -41,8 +57,12 @@ class Dropdown extends React.Component {
   }
 
   onClickInputHandler = () => {
-    const countries = getCounties(this.state.searchValue, MAX_ITEMS_AMOUNT);
-    this.setState({ isOpen: true, countries });
+    if (!this.state.isOpen) {
+      const countries = getCounties(this.state.searchValue, MAX_ITEMS_AMOUNT);
+      this.setState({ isOpen: true, countries });
+    } else {
+      this.setState({ isOpen: false });
+    }
   }
 
   onChangeCountry = (country) => {
@@ -81,9 +101,11 @@ class Dropdown extends React.Component {
     let itemsList = null;
     if (this.state.isOpen && this.state.countries.length) {
       itemsList = (<ItemsList
+        ref={this.itemsListRef}
         searchValue={searchValue}
         onChange={this.onChangeCountry}
         countries={this.state.countries}
+        openToTop={this.state.openToTop}
       />);
     }
 
@@ -99,7 +121,12 @@ class Dropdown extends React.Component {
               type="text"
               value={searchValue}
             />
-            <div className={classNames('placeholder', { '--forceOpen': searchValue || this.state.isOpen })}>
+            <div
+              className={classNames('placeholder', {
+                '--forceOpen': searchValue || this.state.isOpen,
+                '--hidden': this.state.openToTop && this.state.isOpen,
+              })}
+            >
               Выберете страну
             </div>
             <div className={classNames('expander')}>

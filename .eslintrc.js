@@ -7,6 +7,6 @@ module.exports = {
     "rules": {
         "import/no-unresolved": "off",
         "import/extensions": "off",
-        "no-plusplus": ["error", { "allowForLoopAfterthoughts": true }],
+        "react/no-did-update-set-state": "off",
     }
 };

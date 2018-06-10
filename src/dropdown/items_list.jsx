@@ -5,15 +5,28 @@ import clssnms from 'clssnms';
 const classNames = clssnms('dropdown');
 
 class ItemsList extends React.Component {
+  constructor(props) {
+    super(props);
+
+    this.listRef = React.createRef();
+  }
+
   onClickHandler = (event) => {
     if (event.target.className === classNames('item')) {
       this.props.onChange(event.target.innerText);
     }
   }
 
+  getListOffsetHeight = () => this.listRef.current.offsetHeight
+
   render() {
     return (
-      <div className={classNames('list')} onClick={this.onClickHandler} role="presentation">
+      <div
+        ref={this.listRef}
+        className={classNames('list', { '--openToTop': this.props.openToTop })}
+        onClick={this.onClickHandler}
+        role="presentation"
+      >
         {this.props.countries.map((country) => {
           let value = country.name;
           let { searchValue } = this.props;
@@ -44,6 +57,7 @@ ItemsList.propTypes = {
     name: PropTypes.string.isRequired,
     short: PropTypes.string,
   })).isRequired,
+  openToTop: PropTypes.bool.isRequired,
 };
 
 export default ItemsList;
