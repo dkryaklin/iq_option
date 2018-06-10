@@ -19,22 +19,14 @@ class Dropdown extends React.Component {
     };
 
     this.dropdown = React.createRef();
-    this.select = React.createRef();
   }
 
   componentDidMount = () => {
-    document.addEventListener('touchstart', this.onTouchHandler);
     document.addEventListener('click', this.onClickHandler);
   }
 
   componentWillUnmount = () => {
-    document.removeEventListener('touchstart', this.onTouchHandler);
     document.removeEventListener('click', this.onClickHandler);
-  }
-
-  onTouchHandler = (event) => {
-    event.preventDefault();
-    this.onClickHandler(event);
   }
 
   onClickHandler = (event) => {
@@ -46,6 +38,8 @@ class Dropdown extends React.Component {
           selectedCountry: event.target.innerText,
           isOpen: false,
         });
+      } else {
+        this.onFocusHandler();
       }
     } else {
       this.setState({ isOpen: false });
@@ -65,12 +59,12 @@ class Dropdown extends React.Component {
   }
 
   getList() {
+    if (!this.state.isOpen || this.state.countries.length === 0) {
+      return null;
+    }
+
     return (
-      <div
-        className={classNames('list', {
-          '--isOpen': this.state.isOpen && this.state.countries.length,
-        })}
-      >
+      <div className={classNames('list')}>
         {this.state.countries.map((item) => {
           let value = item.name;
 
