@@ -1,5 +1,6 @@
 import React from 'react';
 import clssnms from 'clssnms';
+import 'es6-object-assign/auto';
 import { getCounties } from './countries';
 import FallbackSelect from './fallback_select';
 import ItemsList from './items_list';
