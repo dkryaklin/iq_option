@@ -1,6 +1,6 @@
 import React from 'react';
 import clssnms from 'clssnms';
-import { getCounties } from './countries';
+import { getCounties } from '../countries';
 import './dropdown.styl';
 
 const classNames = clssnms('dropdown');
@@ -19,14 +19,22 @@ class Dropdown extends React.Component {
     };
 
     this.dropdown = React.createRef();
+    this.select = React.createRef();
   }
 
   componentDidMount = () => {
+    document.addEventListener('touchstart', this.onTouchHandler);
     document.addEventListener('click', this.onClickHandler);
   }
 
   componentWillUnmount = () => {
+    document.removeEventListener('touchstart', this.onTouchHandler);
     document.removeEventListener('click', this.onClickHandler);
+  }
+
+  onTouchHandler = (event) => {
+    event.preventDefault();
+    this.onClickHandler(event);
   }
 
   onClickHandler = (event) => {
@@ -56,23 +64,29 @@ class Dropdown extends React.Component {
     this.setState({ isOpen: true, countries });
   }
 
-  getListItems() {
-    const listItems = this.state.countries.map((item) => {
-      let value = item.name;
+  getList() {
+    return (
+      <div
+        className={classNames('list', {
+          '--isOpen': this.state.isOpen && this.state.countries.length,
+        })}
+      >
+        {this.state.countries.map((item) => {
+          let value = item.name;
 
-      if (this.state.inputValue) {
-        value = item.name.toLowerCase().replace(this.state.inputValue, '');
-      }
+          if (this.state.inputValue) {
+            value = item.name.toLowerCase().replace(this.state.inputValue, '');
+          }
 
-      return (
-        <div key={item.code} className={classNames('item')}>
-          {this.state.inputValue ? <span>{this.state.inputValue}</span> : null}
-          {value}
-        </div>
-      );
-    });
-
-    return listItems;
+          return (
+            <div key={item.code} className={classNames('item')}>
+              {this.state.inputValue ? <span>{this.state.inputValue}</span> : null}
+              {value}
+            </div>
+          );
+        })}
+      </div>
+    );
   }
 
   render() {
@@ -98,13 +112,7 @@ class Dropdown extends React.Component {
             <div className={classNames('trangle', { '--isOpen': this.state.isOpen })} />
           </div>
         </div>
-        <div
-          className={classNames('list', {
-            '--isOpen': this.state.isOpen && this.state.countries.length,
-          })}
-        >
-          {this.getListItems()}
-        </div>
+        {this.getList()}
       </div>
     );
   }
