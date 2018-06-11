@@ -6,6 +6,8 @@ module.exports = {
   output: {
     filename: 'dropdown.js',
     path: path.resolve(__dirname, 'dist'),
+    library: 'dropdown',
+    libraryTarget: 'umd',
   },
   resolve: {
     extensions: ['.js', '.jsx'],
