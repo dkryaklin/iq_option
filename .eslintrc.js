@@ -8,5 +8,7 @@ module.exports = {
         "import/no-unresolved": "off",
         "import/extensions": "off",
         "react/no-did-update-set-state": "off",
+        'no-plusplus': ["error", { "allowForLoopAfterthoughts": true }],
+        'import/prefer-default-export': 'off',
     }
 };
