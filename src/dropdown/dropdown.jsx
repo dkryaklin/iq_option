@@ -137,7 +137,7 @@ class Dropdown extends React.Component {
                 '--hidden': this.state.openToTop && this.state.isOpen && this.state.items.length,
               })}
             >
-              Выберете страну
+              {this.props.title}
             </div>
             <div className={classNames('expander')}>
               <div className={classNames('trangle', { '--isOpen': this.state.isOpen })} />
@@ -154,12 +154,14 @@ Dropdown.propTypes = {
   onChange: PropTypes.func,
   maxItemsAmount: PropTypes.number,
   items: PropTypes.arrayOf(PropTypes.string),
+  title: PropTypes.string,
 };
 
 Dropdown.defaultProps = {
   onChange: () => {},
   maxItemsAmount: 10,
   items: [],
+  title: 'Выберете из списка',
 };
 
 Dropdown.displayName = 'dropdown';

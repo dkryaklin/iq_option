@@ -1,7 +1,7 @@
 {
   "name": "iq_option",
   "version": "1.0.0",
-  "main": "dist/index.js",
+  "main": "dist/dropdown.js",
   "scripts": {
     "start": "webpack-dev-server --hot",
     "build": "./node_modules/.bin/webpack --config=webpack.config.prod.js"
