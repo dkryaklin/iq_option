@@ -2,25 +2,23 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import clssnms from 'clssnms';
 import 'es6-object-assign/auto';
-import { getCounties } from './countries';
 import FallbackSelect from './fallback_select';
 import ItemsList from './items_list';
+import { filterItems } from './utils';
 import './dropdown.styl';
 
 const classNames = clssnms('dropdown');
 
-const MAX_ITEMS_AMOUNT = 10;
-
 class Dropdown extends React.Component {
-  constructor() {
-    super();
+  constructor(props) {
+    super(props);
 
     this.state = {
       isOpen: false,
       openToTop: false,
       searchValue: '',
-      countries: [],
-      selectedCountry: null,
+      items: [],
+      selectedItem: null,
     };
 
     this.dropdownRef = React.createRef();
@@ -34,7 +32,7 @@ class Dropdown extends React.Component {
 
   componentDidUpdate(prevProps, prevState) {
     if ((!prevState.isOpen && prevState.isOpen !== this.state.isOpen) ||
-      (this.state.isOpen && this.state.countries.length !== prevState.countries.length)) {
+      (this.state.isOpen && this.state.items.length !== prevState.items.length)) {
       if (!this.itemsListRef.current) {
         return;
       }
@@ -56,31 +54,31 @@ class Dropdown extends React.Component {
 
   onChangeInputHandler = (event) => {
     const searchValue = event.target.value;
-    const countries = getCounties(searchValue, MAX_ITEMS_AMOUNT);
+    const items = filterItems(searchValue, this.props.items, this.props.maxItemsAmount);
 
-    this.setState({ searchValue, countries, isOpen: true });
+    this.setState({ searchValue, items, isOpen: true });
   }
 
   onClickInputHandler = () => {
     if (!this.state.isOpen) {
-      const countries = getCounties(this.state.searchValue, MAX_ITEMS_AMOUNT);
-      this.setState({ isOpen: true, countries });
+      const items = filterItems(this.state.searchValue, this.props.items, this.props.maxItemsAmount);
+      this.setState({ isOpen: true, items });
     } else {
       this.setState({ isOpen: false });
     }
   }
 
-  onChangeCountry = (country) => {
+  onChangeItem = (item) => {
     this.setState({
-      searchValue: country,
-      selectedCountry: country,
+      searchValue: item,
+      selectedItem: item,
       isOpen: false,
     });
 
-    this.props.onChange(country);
+    this.props.onChange(item);
   }
 
-  getSelectedItem = () => this.state.selectedCountry;
+  getSelectedItem = () => this.state.selectedItem;
 
   closeDropdown = (event) => {
     if (!this.dropdownRef.current.contains(event.target)) {
@@ -88,10 +86,11 @@ class Dropdown extends React.Component {
 
       if (this.state.searchValue === '') {
         // ability to clear dropdown value
-        nextState.selectedCountry = null;
-      } else if (this.state.selectedCountry) {
+        nextState.selectedItem = null;
+        this.props.onChange('');
+      } else if (this.state.selectedItem) {
         // revert if user not select new one
-        nextState.searchValue = this.state.selectedCountry;
+        nextState.searchValue = this.state.selectedItem;
       }
 
       this.setState(nextState);
@@ -108,12 +107,12 @@ class Dropdown extends React.Component {
     const { searchValue } = this.state;
 
     let itemsList = null;
-    if (this.state.isOpen && this.state.countries.length) {
+    if (this.state.isOpen && this.state.items.length) {
       itemsList = (<ItemsList
         ref={this.itemsListRef}
         searchValue={searchValue}
-        onChange={this.onChangeCountry}
-        countries={this.state.countries}
+        onChange={this.onChangeItem}
+        items={this.state.items}
         openToTop={this.state.openToTop}
       />);
     }
@@ -121,7 +120,7 @@ class Dropdown extends React.Component {
     return (
       <div className={classNames()} ref={this.dropdownRef}>
         <div className={classNames('select-wrapper')} onTouchStart={this.wrapperTouchHandler}>
-          <FallbackSelect onChange={this.onChangeCountry} />
+          <FallbackSelect onChange={this.onChangeItem} items={this.props.items} />
           <div className={classNames('select')} ref={this.selectRef}>
             <input
               onClick={this.onClickInputHandler}
@@ -151,10 +150,14 @@ class Dropdown extends React.Component {
 
 Dropdown.propTypes = {
   onChange: PropTypes.func,
+  maxItemsAmount: PropTypes.number,
+  items: PropTypes.arrayOf(PropTypes.string),
 };
 
 Dropdown.defaultProps = {
   onChange: () => {},
+  maxItemsAmount: 10,
+  items: [],
 };
 
 Dropdown.displayName = 'dropdown';

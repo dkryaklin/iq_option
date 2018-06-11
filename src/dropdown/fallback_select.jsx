@@ -1,30 +1,30 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import clssnms from 'clssnms';
-import { getCounties } from './countries';
 
 const classNames = clssnms('dropdown');
-const ALL_COUNTRIES = getCounties('');
 
-const FallbackSelect = (props) => {
-  const countries = [...ALL_COUNTRIES];
-  countries.unshift({
-    code: 'empty',
-    name: '',
-  });
+const FallbackSelect = ({ onChange, items }) => {
+  const fallbackItems = [...items];
+  fallbackItems.unshift('');
 
   return (
     <select
       className={classNames('fallback-select')}
-      onChange={event => props.onChange(event.target.value)}
+      onChange={event => onChange(event.target.value)}
     >
-      {countries.map(item => <option key={item.code}>{item.name}</option>)}
+      {fallbackItems.map(item => <option key={item}>{item}</option>)}
     </select>
   );
 };
 
 FallbackSelect.propTypes = {
   onChange: PropTypes.func.isRequired,
+  items: PropTypes.arrayOf(PropTypes.string),
+};
+
+FallbackSelect.defaultProps = {
+  items: [],
 };
 
 FallbackSelect.displayName = 'fallback_select';

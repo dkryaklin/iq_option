@@ -27,18 +27,18 @@ class ItemsList extends React.Component {
         onClick={this.onClickHandler}
         role="presentation"
       >
-        {this.props.countries.map((country) => {
-          let value = country.name;
+        {this.props.items.map((item) => {
+          let value = item;
           let { searchValue } = this.props;
 
           searchValue = searchValue.toLowerCase();
 
           if (searchValue) {
-            value = country.name.toLowerCase().replace(searchValue, '');
+            value = item.toLowerCase().replace(searchValue, '');
           }
 
           return (
-            <div key={country.code} className={classNames('item')}>
+            <div key={item} className={classNames('item')}>
               {searchValue ? <span>{searchValue}</span> : null}
               {value}
             </div>
@@ -52,11 +52,7 @@ class ItemsList extends React.Component {
 ItemsList.propTypes = {
   searchValue: PropTypes.string.isRequired,
   onChange: PropTypes.func.isRequired,
-  countries: PropTypes.arrayOf(PropTypes.shape({
-    code: PropTypes.string.isRequired,
-    name: PropTypes.string.isRequired,
-    short: PropTypes.string,
-  })).isRequired,
+  items: PropTypes.arrayOf(PropTypes.string).isRequired,
   openToTop: PropTypes.bool.isRequired,
 };
 

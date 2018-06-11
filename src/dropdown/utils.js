@@ -1,22 +1,4 @@
-export const sortItems = (items) => {
-  const results = [...items];
-
-  results.sort((itemA, itemB) => {
-    const a = itemA.toLowerCase();
-    const b = itemB.toLowerCase();
-
-    if (a < b) {
-      return -1;
-    } else if (a > b) {
-      return 1;
-    }
-    return 0;
-  });
-
-  return results;
-};
-
-export const getItems = (searchValue, items, maxAmount = 0) => {
+export const filterItems = (searchValue, items, maxAmount = 0) => {
   const searchQuery = searchValue && searchValue.toLowerCase();
   const results = [];
 
@@ -32,7 +14,17 @@ export const getItems = (searchValue, items, maxAmount = 0) => {
     }
   }
 
+  results.sort((itemA, itemB) => {
+    const a = itemA.toLowerCase();
+    const b = itemB.toLowerCase();
 
+    if (a < b) {
+      return -1;
+    } else if (a > b) {
+      return 1;
+    }
+    return 0;
+  });
 
   return results;
 };
