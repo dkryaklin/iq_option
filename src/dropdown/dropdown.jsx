@@ -18,7 +18,7 @@ class Dropdown extends React.Component {
       openToTop: false,
       searchValue: '',
       items: [],
-      selectedItem: null,
+      selectedItem: '',
     };
 
     this.dropdownRef = React.createRef();
@@ -31,7 +31,7 @@ class Dropdown extends React.Component {
   }
 
   componentDidUpdate(prevProps, prevState) {
-    if ((!prevState.isOpen && prevState.isOpen !== this.state.isOpen) ||
+    if ((!prevState.isOpen && this.state.isOpen) ||
       (this.state.isOpen && this.state.items.length !== prevState.items.length)) {
       if (!this.itemsListRef.current) {
         return;
@@ -45,6 +45,10 @@ class Dropdown extends React.Component {
       } else {
         this.setState({ openToTop: false });
       }
+    }
+
+    if (this.state.selectedItem !== prevState.selectedItem) {
+      this.props.onChange(this.state.selectedItem);
     }
   }
 
@@ -61,7 +65,8 @@ class Dropdown extends React.Component {
 
   onClickInputHandler = () => {
     if (!this.state.isOpen) {
-      const items = filterItems(this.state.searchValue, this.props.items, this.props.maxItemsAmount);
+      const itemsAmount = this.props.maxItemsAmount;
+      const items = filterItems(this.state.searchValue, this.props.items, itemsAmount);
       this.setState({ isOpen: true, items });
     } else {
       this.setState({ isOpen: false });
@@ -74,8 +79,6 @@ class Dropdown extends React.Component {
       selectedItem: item,
       isOpen: false,
     });
-
-    this.props.onChange(item);
   }
 
   getSelectedItem = () => this.state.selectedItem;
@@ -86,9 +89,8 @@ class Dropdown extends React.Component {
 
       if (this.state.searchValue === '') {
         // ability to clear dropdown value
-        nextState.selectedItem = null;
-        this.props.onChange('');
-      } else if (this.state.selectedItem) {
+        nextState.selectedItem = '';
+      } else {
         // revert if user not select new one
         nextState.searchValue = this.state.selectedItem;
       }
@@ -132,7 +134,7 @@ class Dropdown extends React.Component {
             <div
               className={classNames('placeholder', {
                 '--forceOpen': searchValue || this.state.isOpen,
-                '--hidden': this.state.openToTop && this.state.isOpen,
+                '--hidden': this.state.openToTop && this.state.isOpen && this.state.items.length,
               })}
             >
               Выберете страну
