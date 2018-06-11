@@ -1,4 +1,5 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import clssnms from 'clssnms';
 import 'es6-object-assign/auto';
 import { getCounties } from './countries';
@@ -34,6 +35,10 @@ class Dropdown extends React.Component {
   componentDidUpdate(prevProps, prevState) {
     if ((!prevState.isOpen && prevState.isOpen !== this.state.isOpen) ||
       (this.state.isOpen && this.state.countries.length !== prevState.countries.length)) {
+      if (!this.itemsListRef.current) {
+        return;
+      }
+
       const clientRect = this.dropdownRef.current.getBoundingClientRect();
       const listOffsetHeight = this.itemsListRef.current.getListOffsetHeight();
 
@@ -71,7 +76,11 @@ class Dropdown extends React.Component {
       selectedCountry: country,
       isOpen: false,
     });
+
+    this.props.onChange(country);
   }
+
+  getSelectedItem = () => this.state.selectedCountry;
 
   closeDropdown = (event) => {
     if (!this.dropdownRef.current.contains(event.target)) {
@@ -139,5 +148,15 @@ class Dropdown extends React.Component {
     );
   }
 }
+
+Dropdown.propTypes = {
+  onChange: PropTypes.func,
+};
+
+Dropdown.defaultProps = {
+  onChange: () => {},
+};
+
+Dropdown.displayName = 'dropdown';
 
 export default Dropdown;

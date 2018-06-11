@@ -27,4 +27,6 @@ FallbackSelect.propTypes = {
   onChange: PropTypes.func.isRequired,
 };
 
+FallbackSelect.displayName = 'fallback_select';
+
 export default FallbackSelect;

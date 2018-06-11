@@ -60,4 +60,6 @@ ItemsList.propTypes = {
   openToTop: PropTypes.bool.isRequired,
 };
 
+ItemsList.displayName = 'items_list';
+
 export default ItemsList;
