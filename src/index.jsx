@@ -1,6 +1,6 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import Dropdown from './dropdown/dropdown';
+import Dropdown from './dropdown';
 import { countries } from './countries';
 import './index.styl';
 
